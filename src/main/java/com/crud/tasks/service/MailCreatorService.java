@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class MailCreatorService {
 
@@ -22,6 +25,11 @@ public class MailCreatorService {
     private TemplateEngine templateEngine;
 
     public String buildTrelloCardEmail(String message){
+        List<String> functionality = new ArrayList<>();
+        functionality.add("You can manage your tasks");
+        functionality.add("Provides connection with Trello Account");
+        functionality.add("Application allows sending tasks to Trello");
+
         Context context = new Context();
         context.setVariable("message", message);
         context.setVariable("tasks_url", "http://localhost:8888/crud");
@@ -31,6 +39,25 @@ public class MailCreatorService {
         context.setVariable("companyName", companyConfig.getCompanyName());
         context.setVariable("companyPhone", companyConfig.getCompanyPhone());
         context.setVariable("companyMail", companyConfig.getCompanyEmail());
+        context.setVariable("show_button", false);
+        context.setVariable("is_friend", true);
+        context.setVariable("admin_config", adminConfig);
+        context.setVariable("application_functionality", functionality);
         return templateEngine.process("mail/created-trello-card-mail", context);
+    }
+
+    public String buildTasksEmail(String message) {
+        Context context = new Context();
+        context.setVariable("message", message);
+        context.setVariable("tasks_url", "http://localhost:8888/crud");
+        context.setVariable("button", "Visit website");
+        context.setVariable("admin_name", adminConfig.getAdminName());
+        context.setVariable("goodbye", adminConfig.getAdminName());
+        context.setVariable("companyName", companyConfig.getCompanyName());
+        context.setVariable("companyPhone", companyConfig.getCompanyPhone());
+        context.setVariable("companyMail", companyConfig.getCompanyEmail());
+        context.setVariable("isFriend", true);
+        context.setVariable("adminConfig", adminConfig);
+        return templateEngine.process("mail/tasks-mail", context);
     }
 }
