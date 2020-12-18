@@ -42,6 +42,15 @@ public class SimpleEmailService {
         };
     }
 
+    private MimeMessagePreparator createMimeCounterMessage(final Mail mail) {
+        return mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setTo(mail.getMailTo());
+            messageHelper.setSubject(mail.getSubject());
+            messageHelper.setText(mailCreatorService.buildTasksEmail(mail.getMessage()), true);
+        };
+    }
+
     private SimpleMailMessage createMailMessage (final Mail mail){
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(mail.getMailTo());
